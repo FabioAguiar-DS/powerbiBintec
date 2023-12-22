@@ -1,0 +1,52 @@
+SELECT 
+	ven.ID,
+	empresa.NOME_FANTASIA 'EMPRESA',
+	ven.VENDA_NUMERO,
+	ven.DATA_VENDA,
+	ven.ID_CLIENTE,
+	cli.NOME 'CLIENTE',
+	ven.id_vendedor,
+	vendedor.NOME 'VENDEDOR',
+	
+    ven.VALOR_TOTAL 'VALOR_TOTAL',
+	ven.VALOR_FRETE 'FRETE',
+	ven.VALOR_ACRESCIMO 'ACRESCIMO',
+	ven.VALOR_DESCONTO 'DESCONTO',
+	ven.FORMA_PAGAMENTO 'FORMA_PAGAMENTO',
+	ven.ID_TABELA_PRECO,
+	ven.SITUACAO,
+	ven.DEVOLUCAO,
+	sum(itens.VALOR_CUSTO) 'CUSTO_VENDA',
+	((ven.VALOR_TOTAL-sum(itens.VALOR_CUSTO))/ven.VALOR_TOTAL)*100 'MARGEM'
+	
+FROM venda_cabecalho ven
+INNER JOIN empresa on empresa.id=ven.ID_EMPRESA
+INNER JOIN view_pessoa_cliente cli ON cli.ID=ven.id_cliente 
+INNER JOIN colaborador colab ON colab.ID=ven.ID_VENDEDOR 
+INNER JOIN pessoa vendedor ON colab.ID_PESSOA=vendedor.id AND vendedor.ID_EMPRESA=VEN.ID_EMPRESA
+INNER JOIN venda_detalhe itens on itens.ID_VENDA_CABECALHO=ven.id
+
+WHERE 
+	ven.SITUACAO <> 'C'
+
+GROUP by
+	ven.ID,
+	empresa.NOME_FANTASIA,
+	ven.VENDA_NUMERO,
+	ven.DATA_VENDA,
+	ven.ID_CLIENTE,
+	cli.NOME,
+	ven.id_vendedor,
+	vendedor.NOME,
+    ven.VALOR_TOTAL,
+	ven.VALOR_FRETE,
+	ven.VALOR_ACRESCIMO,
+	ven.VALOR_DESCONTO,
+	ven.FORMA_PAGAMENTO,
+	ven.ID_TABELA_PRECO,
+	ven.SITUACAO,
+	ven.DEVOLUCAO
+
+ORDER BY 
+	ven.venda_numero;
+
