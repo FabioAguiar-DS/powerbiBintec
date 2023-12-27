@@ -1,0 +1,43 @@
+SELECT 
+	ven.ID,
+	ven.VENDA_NUMERO,
+	ven.DATA_VENDA,
+	ven.ID_CLIENTE,
+	cli.NOME 'CLIENTE',
+	cli.CIDADE 'CIDADE',
+	cli.BAIRRO 'BAIRRO',
+	ven.id_vendedor,
+	vendedor.NOME 'VENDEDOR',
+  ven.VALOR_TOTAL 'VALOR_TOTAL',
+	ven.FORMA_PAGAMENTO 'FORMA_PAGAMENTO',
+	ven.SITUACAO,
+	ven.DEVOLUCAO,
+	prod.NOME,
+	prod.CODIGO_INTERNO,
+	unid.SIGLA,
+	itens.QUANTIDADE, 
+	itens.VALOR_CUSTO 'CUSTO_PRODUTO',
+	itens.ID_TABELA_PRECO,
+	itens.FRETE_VALOR 'FRETE',
+	itens.VALOR_ACRESCIMO 'ACRESCIMO',
+	itens.VALOR_DESCONTO 'DESCONTO',
+	itens.VALOR_TOTAL 'TOTAL_ITEM',
+	((itens.VALOR_TOTAL-(itens.VALOR_CUSTO))/itens.VALOR_TOTAL)*100 'MARGEM',
+	itens.VALOR_UNITARIO 'VALOR_UNITARIO',
+	vendedorItem.NOME 'VENDEDOR_ITEM'
+	
+	
+FROM venda_cabecalho ven
+INNER JOIN empresa on empresa.id=ven.ID_EMPRESA
+INNER JOIN view_pessoa_cliente cli ON cli.ID=ven.id_cliente 
+LEFT JOIN colaborador colab ON colab.ID=ven.ID_VENDEDOR 
+LEFT JOIN pessoa vendedor ON colab.ID_PESSOA=vendedor.id AND vendedor.ID_EMPRESA=VEN.ID_EMPRESA
+INNER JOIN venda_detalhe itens on itens.ID_VENDA_CABECALHO=ven.id
+INNER JOIN produto prod on prod.ID=itens.ID_PRODUTO
+INNER JOIN unidade_produto unid on unid.id=prod.ID_UNIDADE_PRODUTO
+LEFT JOIN colaborador colabItem ON colabItem.ID=itens.ID_VENDEDOR 
+LEFT JOIN pessoa vendedorItem ON colabItem.ID_PESSOA=vendedorItem.id AND vendedorItem.ID_EMPRESA=ven.ID_EMPRESA
+
+WHERE 
+	ven.SITUACAO <> 'C'
+
