@@ -5,6 +5,8 @@ SELECT
 	ven.DATA_VENDA,
 	ven.ID_CLIENTE,
 	cli.NOME 'CLIENTE',
+	cli.CIDADE 'CIDADE',
+	cli.BAIRRO 'BAIRRO',
 	ven.id_vendedor,
 	vendedor.NOME 'VENDEDOR',
 	
@@ -49,4 +51,3 @@ GROUP by
 
 ORDER BY 
 	ven.venda_numero;
-
