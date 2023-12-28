@@ -1,5 +1,6 @@
 SELECT 
 	ven.ID,
+	empresa.NOME_FANTASIA 'EMPRESA',
 	ven.VENDA_NUMERO,
 	ven.DATA_VENDA,
 	ven.ID_CLIENTE,
