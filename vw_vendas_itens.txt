@@ -1,6 +1,5 @@
 SELECT 
 	ven.ID,
-	empresa.NOME_FANTASIA 'EMPRESA',
 	ven.VENDA_NUMERO,
 	ven.DATA_VENDA,
 	ven.ID_CLIENTE,
@@ -9,8 +8,8 @@ SELECT
 	cli.BAIRRO 'BAIRRO',
 	ven.id_vendedor,
 	vendedor.NOME 'VENDEDOR',
-        ven.VALOR_TOTAL 'VALOR_TOTAL',
-	ven.FORMA_PAGAMENTO 'FORMA_PAGAMENTO',
+	ven.VALOR_TOTAL 'VALOR_TOTAL',
+	formasPagamento.Tipos_Pagamento 'FORMA_PAGAMENTO',
 	ven.SITUACAO,
 	ven.DEVOLUCAO,
 	prod.NOME 'PRODUTO',
@@ -25,7 +24,8 @@ SELECT
 	itens.VALOR_TOTAL 'TOTAL_ITEM',
 	((itens.VALOR_TOTAL-(itens.VALOR_CUSTO))/itens.VALOR_TOTAL)*100 'MARGEM',
 	itens.VALOR_UNITARIO 'VALOR_UNITARIO',
-	vendedorItem.NOME 'VENDEDOR_ITEM'
+	vendedorItem.NOME 'VENDEDOR_ITEM',
+	ven.ID_VENDA_CONDICOES_PAGAMENTO
 	
 	
 FROM venda_cabecalho ven
@@ -38,7 +38,17 @@ INNER JOIN produto prod on prod.ID=itens.ID_PRODUTO
 INNER JOIN unidade_produto unid on unid.id=prod.ID_UNIDADE_PRODUTO
 LEFT JOIN colaborador colabItem ON colabItem.ID=itens.ID_VENDEDOR 
 LEFT JOIN pessoa vendedorItem ON colabItem.ID_PESSOA=vendedorItem.id AND vendedorItem.ID_EMPRESA=ven.ID_EMPRESA
+LEFT JOIN (
+	SELECT 
+		formapg.ID_VENDA_CABECALHO,
+		GROUP_CONCAT(tipopg.DESCRICAO SEPARATOR ', ') AS Tipos_Pagamento
+		FROM 
+			venda_recebimento formapg
+		INNER JOIN 
+			fin_tipo_recebimento tipopg ON tipopg.id = formapg.ID_FIN_TIPO_RECEBIMENTO
+		GROUP BY 
+			formapg.ID_VENDA_CABECALHO
+	) formasPagamento on formasPagamento.ID_VENDA_CABECALHO=ven.ID
 
 WHERE 
 	ven.SITUACAO <> 'C'
-
