@@ -54,6 +54,5 @@ LEFT JOIN (
 		GROUP BY 
 			formapg.ID_VENDA_CABECALHO
 	) formasPagamento on formasPagamento.ID_VENDA_CABECALHO=ven.ID
-
 WHERE 
 	ven.SITUACAO <> 'C'
