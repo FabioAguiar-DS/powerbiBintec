@@ -25,7 +25,9 @@ SELECT
 	((itens.VALOR_TOTAL-(itens.VALOR_CUSTO))/itens.VALOR_TOTAL)*100 'MARGEM',
 	itens.VALOR_UNITARIO 'VALOR_UNITARIO',
 	vendedorItem.NOME 'VENDEDOR_ITEM',
-	ven.ID_VENDA_CONDICOES_PAGAMENTO
+	ven.ID_VENDA_CONDICOES_PAGAMENTO,
+	prodSubGrupo.NOME 'SUBGRUPO',
+	prodGrupo.NOME 'GRUPO'
 	
 	
 FROM venda_cabecalho ven
@@ -35,6 +37,8 @@ LEFT JOIN colaborador colab ON colab.ID=ven.ID_VENDEDOR
 LEFT JOIN pessoa vendedor ON colab.ID_PESSOA=vendedor.id AND vendedor.ID_EMPRESA=VEN.ID_EMPRESA
 INNER JOIN venda_detalhe itens on itens.ID_VENDA_CABECALHO=ven.id
 INNER JOIN produto prod on prod.ID=itens.ID_PRODUTO
+LEFT JOIN produto_sub_grupo prodSubGrupo on prod.ID_SUB_GRUPO=prodSubGrupo.ID
+LEFT JOIN produto_grupo prodGrupo on prodGrupo.id=prodSubGrupo.ID_GRUPO
 INNER JOIN unidade_produto unid on unid.id=prod.ID_UNIDADE_PRODUTO
 LEFT JOIN colaborador colabItem ON colabItem.ID=itens.ID_VENDEDOR 
 LEFT JOIN pessoa vendedorItem ON colabItem.ID_PESSOA=vendedorItem.id AND vendedorItem.ID_EMPRESA=ven.ID_EMPRESA
