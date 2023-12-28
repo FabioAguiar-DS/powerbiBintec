@@ -1,5 +1,6 @@
 SELECT 
 	ven.ID,
+	empresa.NOME_FANTASIA 'EMPRESA',
 	ven.VENDA_NUMERO,
 	ven.DATA_VENDA,
 	ven.ID_CLIENTE,
@@ -8,36 +9,23 @@ SELECT
 	cli.BAIRRO 'BAIRRO',
 	ven.id_vendedor,
 	vendedor.NOME 'VENDEDOR',
-	ven.VALOR_TOTAL 'VALOR_TOTAL',
+    	ven.VALOR_TOTAL 'VALOR_TOTAL',
+	ven.VALOR_FRETE 'FRETE',
+	ven.VALOR_ACRESCIMO 'ACRESCIMO',
+	ven.VALOR_DESCONTO 'DESCONTO',
 	formasPagamento.Tipos_Pagamento 'FORMA_PAGAMENTO',
+	ven.ID_TABELA_PRECO,
 	ven.SITUACAO,
 	ven.DEVOLUCAO,
-	prod.NOME 'PRODUTO',
-	prod.CODIGO_INTERNO,
-	unid.SIGLA,
-	itens.QUANTIDADE, 
-	itens.VALOR_CUSTO 'CUSTO_PRODUTO',
-	itens.ID_TABELA_PRECO,
-	itens.FRETE_VALOR 'FRETE',
-	itens.VALOR_ACRESCIMO 'ACRESCIMO',
-	itens.VALOR_DESCONTO 'DESCONTO',
-	itens.VALOR_TOTAL 'TOTAL_ITEM',
-	((itens.VALOR_TOTAL-(itens.VALOR_CUSTO))/itens.VALOR_TOTAL)*100 'MARGEM',
-	itens.VALOR_UNITARIO 'VALOR_UNITARIO',
-	vendedorItem.NOME 'VENDEDOR_ITEM',
-	ven.ID_VENDA_CONDICOES_PAGAMENTO
-	
+	sum(itens.VALOR_CUSTO) 'CUSTO_VENDA',
+	((ven.VALOR_TOTAL-sum(itens.VALOR_CUSTO))/ven.VALOR_TOTAL)*100 'MARGEM'
 	
 FROM venda_cabecalho ven
 INNER JOIN empresa on empresa.id=ven.ID_EMPRESA
 INNER JOIN view_pessoa_cliente cli ON cli.ID=ven.id_cliente 
-LEFT JOIN colaborador colab ON colab.ID=ven.ID_VENDEDOR 
-LEFT JOIN pessoa vendedor ON colab.ID_PESSOA=vendedor.id AND vendedor.ID_EMPRESA=VEN.ID_EMPRESA
+INNER JOIN colaborador colab ON colab.ID=ven.ID_VENDEDOR 
+INNER JOIN pessoa vendedor ON colab.ID_PESSOA=vendedor.id AND vendedor.ID_EMPRESA=VEN.ID_EMPRESA
 INNER JOIN venda_detalhe itens on itens.ID_VENDA_CABECALHO=ven.id
-INNER JOIN produto prod on prod.ID=itens.ID_PRODUTO
-INNER JOIN unidade_produto unid on unid.id=prod.ID_UNIDADE_PRODUTO
-LEFT JOIN colaborador colabItem ON colabItem.ID=itens.ID_VENDEDOR 
-LEFT JOIN pessoa vendedorItem ON colabItem.ID_PESSOA=vendedorItem.id AND vendedorItem.ID_EMPRESA=ven.ID_EMPRESA
 LEFT JOIN (
 	SELECT 
 		formapg.ID_VENDA_CABECALHO,
@@ -52,3 +40,24 @@ LEFT JOIN (
 
 WHERE 
 	ven.SITUACAO <> 'C'
+
+GROUP by
+	ven.ID,
+	empresa.NOME_FANTASIA,
+	ven.VENDA_NUMERO,
+	ven.DATA_VENDA,
+	ven.ID_CLIENTE,
+	cli.NOME,
+	ven.id_vendedor,
+	vendedor.NOME,
+    ven.VALOR_TOTAL,
+	ven.VALOR_FRETE,
+	ven.VALOR_ACRESCIMO,
+	ven.VALOR_DESCONTO,
+	ven.FORMA_PAGAMENTO,
+	ven.ID_TABELA_PRECO,
+	ven.SITUACAO,
+	ven.DEVOLUCAO
+
+ORDER BY 
+	ven.venda_numero;
