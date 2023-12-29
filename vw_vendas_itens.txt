@@ -28,7 +28,8 @@ SELECT
 	vendedorItem.NOME 'VENDEDOR_ITEM',
 	ven.ID_VENDA_CONDICOES_PAGAMENTO,
 	prodSubGrupo.NOME 'SUBGRUPO',
-	prodGrupo.NOME 'GRUPO'
+	prodGrupo.NOME 'GRUPO',
+	CONCAT(cli.ID,cli.NOME) 'CHAVE CLIENTE'
 	
 	
 FROM venda_cabecalho ven
