@@ -18,7 +18,8 @@ SELECT
 	ven.SITUACAO,
 	ven.DEVOLUCAO,
 	sum(itens.VALOR_CUSTO) 'CUSTO_VENDA',
-	((ven.VALOR_TOTAL-sum(itens.VALOR_CUSTO))/ven.VALOR_TOTAL)*100 'MARGEM'
+	((ven.VALOR_TOTAL-sum(itens.VALOR_CUSTO))/ven.VALOR_TOTAL)*100 'MARGEM',
+	CONCAT(cli.ID,cli.NOME) 'CHAVE CLIENTE'
 	
 FROM venda_cabecalho ven
 INNER JOIN empresa on empresa.id=ven.ID_EMPRESA
