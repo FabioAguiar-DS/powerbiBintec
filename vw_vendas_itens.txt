@@ -8,7 +8,7 @@ SELECT
 	cli.CIDADE 'CIDADE',
 	cli.BAIRRO 'BAIRRO',
 	ven.id_vendedor,
-	vendedor.NOME  'VENDEDOR',
+	vendedor.NOME 'VENDEDOR',
 	CASE 
 		WHEN ven.DEVOLUCAO='S' THEN itens.VALOR_TOTAL*-1
 		ELSE ven.VALOR_TOTAL 
