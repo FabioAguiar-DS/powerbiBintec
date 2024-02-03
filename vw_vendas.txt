@@ -32,7 +32,7 @@ FROM venda_cabecalho ven
 INNER JOIN empresa on empresa.id=ven.ID_EMPRESA
 INNER JOIN 
 	(select cliente.* from view_pessoa_cliente cliente
-inner join endereco on endereco.ID_PESSOA=cliente.id and endereco.PRINCIPAL='S') cli ON cli.ID=ven.id_cliente 
+LEFT join endereco on endereco.ID_PESSOA=cliente.id and endereco.PRINCIPAL='S') cli ON cli.ID=ven.id_cliente 
 INNER JOIN colaborador colab ON colab.ID=ven.ID_VENDEDOR 
 INNER JOIN pessoa vendedor ON colab.ID_PESSOA=vendedor.id AND vendedor.ID_EMPRESA=VEN.ID_EMPRESA
 INNER JOIN venda_detalhe itens on itens.ID_VENDA_CABECALHO=ven.id
