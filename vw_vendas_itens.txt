@@ -8,7 +8,7 @@ SELECT
 	cli.CIDADE 'CIDADE',
 	cli.BAIRRO 'BAIRRO',
 	ven.id_vendedor,
-	vendedor.NOME 'VENDEDOR',
+	pessoa.NOME 'VENDEDOR',
 	CASE 
 		WHEN ven.DEVOLUCAO='S' THEN itens.VALOR_TOTAL*-1
 		ELSE ven.VALOR_TOTAL 
@@ -50,8 +50,9 @@ INNER JOIN empresa on empresa.id=ven.ID_EMPRESA
 INNER JOIN 
 	(select cliente.* from view_pessoa_cliente cliente
 LEFT join endereco on endereco.ID_PESSOA=cliente.id and endereco.PRINCIPAL='S') cli ON cli.ID=ven.id_cliente 
-LEFT JOIN colaborador colab ON colab.ID=ven.ID_VENDEDOR 
-LEFT JOIN pessoa vendedor ON colab.ID_PESSOA=vendedor.id AND vendedor.ID_EMPRESA=VEN.ID_EMPRESA
+LEFT join vendedor vd on vd.id=ven.ID_VENDEDOR
+LEFT JOIN colaborador colab ON colab.ID=vd.ID_COLABORADOR 
+LEFT JOIN pessoa pessoa ON pessoa.ID=colab.ID_PESSOA 
 INNER JOIN venda_detalhe itens on itens.ID_VENDA_CABECALHO=ven.id
 INNER JOIN produto prod on prod.ID=itens.ID_PRODUTO
 LEFT JOIN produto_sub_grupo prodSubGrupo on prod.ID_SUB_GRUPO=prodSubGrupo.ID
